@@ -10,9 +10,7 @@ on:
     types: [ published ]
 
 env:
-  CONFIGURATION: Release
-  DOTNET_VERSION: 7.0.x
-  IMAGE_NAME: webapplication1:1.0.1
+  
 
 jobs:
   build:
@@ -41,4 +39,7 @@ jobs:
     - name: Terraform plan
       run: |
         cd infra
-        terraform plan -var="location=centralindia"
+        terraform plan \
+          -var="location=centralindia" \
+          -var="storage_account_tier=Standard" \
+          -var="storage_account_type=LRS"
