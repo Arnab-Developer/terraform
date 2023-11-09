@@ -9,16 +9,35 @@ on:
   release:
     types: [ published ]
 
-env:
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-
 jobs:
-  build:
-    name: Build
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
+    steps:
+
+    - name: Code checkout
+      uses: actions/checkout@v3
+
+    - name: Setup terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: "1.6.3"
+
+    - name: Terraform format check
+      run: |
+        cd infra
+        terraform fmt --check
+
+  apply:
+    name: Apply
+    if: ${{ github.event_name == 'push' }}
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
     steps:
 
     - name: Code checkout
@@ -44,10 +63,11 @@ jobs:
         cd infra
         terraform validate
       
-    - name: Terraform plan
+    - name: Terraform apply
       run: |
         cd infra
-        terraform plan \
+        terraform apply \
+          -auto-approve \
           -var="location=NorthEurope" \
           -var="storage_account_tier=Standard" \
           -var="storage_account_type=LRS"
