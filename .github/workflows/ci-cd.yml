@@ -38,6 +38,11 @@ jobs:
       run: |
         cd infra
         terraform fmt --check
+
+    - name: Terraform validate
+      run: |
+        cd infra
+        terraform validate
       
     - name: Terraform plan
       run: |
