@@ -50,4 +50,4 @@ jobs:
         terraform plan \
           -var="location=NorthEurope" \
           -var="storage_account_tier="Standard" \
-          -var="storage_account_type="LRS" \
+          -var="storage_account_type="LRS"
