@@ -1,0 +1,44 @@
+name: CI CD
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  release:
+    types: [ published ]
+
+env:
+  CONFIGURATION: Release
+  DOTNET_VERSION: 7.0.x
+  IMAGE_NAME: webapplication1:1.0.1
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Code checkout
+      uses: actions/checkout@v3
+
+    - name: Setup terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: "1.6.3"
+        
+    - name: Terraform init
+      run: |
+        cd infra
+        terraform init
+
+    - name: Terraform format check
+      run: |
+        cd infra
+        terraform fmt --check
+      
+    - name: Terraform plan
+      run: |
+        cd infra
+        terraform plan
