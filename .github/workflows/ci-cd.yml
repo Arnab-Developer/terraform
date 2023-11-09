@@ -47,7 +47,4 @@ jobs:
     - name: Terraform plan
       run: |
         cd infra
-        terraform plan \
-          -var="location=centralindia" \
-          -var="storage_account_tier=Standard" \
-          -var="storage_account_type=LRS"
+        terraform plan
