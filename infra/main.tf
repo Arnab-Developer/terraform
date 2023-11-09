@@ -9,8 +9,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "rg-org0101-terrastate"
-    storage_account_name = "saorg0101terrastate"
+    resource_group_name  = "rg-org0101-terrastate-shared"
+    storage_account_name = "storg0101terrastate"
     container_name       = "terrastate"
     key                  = "terraform.tfstate"
   }
