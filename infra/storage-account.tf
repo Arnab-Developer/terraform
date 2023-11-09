@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "example" {
-  name                     = "sa${local.org_name}${local.app_name}${terraform.workspace}"
+  name                     = "sa${local.org_name}${local.app_name}${local.env_name}"
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = var.storage_account_tier
